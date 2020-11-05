@@ -1,0 +1,15 @@
+{
+    "name": "justcommunication-ru/wiracle-api-php-sdk",
+    "description": "Wiracle.ru API PHP SDK",
+    "type": "library",
+    "require": {
+        "psr/log": "^1.1",
+        "guzzlehttp/guzzle": "^6.5"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.7"
+    },
+    "autoload": {
+        "psr-4": {"JustCommunication\\WiracleSDK\\": "src/JustCommunication/WiracleSDK/"}
+    }
+}
