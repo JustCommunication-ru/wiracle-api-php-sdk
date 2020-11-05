@@ -10,6 +10,6 @@
         "phpunit/phpunit": "^5.7"
     },
     "autoload": {
-        "psr-4": {"JustCommunication\\WiracleSDK\\": "src/JustCommunication/WiracleSDK/"}
+        "psr-4": {"JustCommunication\\WiracleSDK\\": "src/"}
     }
 }
