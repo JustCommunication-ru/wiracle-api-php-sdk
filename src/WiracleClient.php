@@ -106,7 +106,7 @@ class WiracleClient implements LoggerAwareInterface
      * @param $password
      * @param $timeout
      * @return string
-     * 
+     *
      * @throws WiracleAPIException
      */
     public static function getToken($username, $password, $timeout)
@@ -201,6 +201,7 @@ class WiracleClient implements LoggerAwareInterface
             throw new WiracleAPIException('Wiracle API Error: ' . $response_data['message'], $response_data['code']);
         }
 
+        /** @var ResponseInterface $response */
         $response = new $apiResponseClass;
         if (!$response instanceof ResponseInterface) {
             throw new WiracleAPIException('Invalid response class');
