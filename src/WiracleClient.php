@@ -25,6 +25,9 @@ class WiracleClient implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
+    const DEFAULT_TIMEOUT = 10;
+    const DEFAULT_CONNECT_TIMEOUT = 4;
+
     /**
      * @var string
      */
@@ -45,8 +48,9 @@ class WiracleClient implements LoggerAwareInterface
      *
      * @param string $username
      * @param string $token
+     * @param int $timeout
      */
-    public function __construct($username, $token, $timeout = 10)
+    public function __construct($username, $token, $timeout = self::DEFAULT_TIMEOUT)
     {
         $this->username = $username;
         $this->token = $token;
@@ -60,11 +64,11 @@ class WiracleClient implements LoggerAwareInterface
      * @param int $timeout
      * @return \GuzzleHttp\Client
      */
-    protected static function createHttpClient($timeout = 10)
+    protected static function createHttpClient($timeout = self::DEFAULT_TIMEOUT)
     {
         return new \GuzzleHttp\Client([
             'base_uri' => 'https://wiracle.ru/',
-            'connect_timeout' => 4,
+            'connect_timeout' => self::DEFAULT_CONNECT_TIMEOUT,
             'timeout' => $timeout
         ]);
     }
@@ -79,7 +83,7 @@ class WiracleClient implements LoggerAwareInterface
      *
      * @throws WiracleAPIException
      */
-    public static function sendTokenRequest($username, $password, $timeout = 10)
+    public static function sendTokenRequest($username, $password, $timeout = self::DEFAULT_TIMEOUT)
     {
         $httpClient = self::createHttpClient($timeout);
 
@@ -108,10 +112,19 @@ class WiracleClient implements LoggerAwareInterface
      *
      * @throws WiracleAPIException
      */
-    public static function getToken($username, $password, $timeout)
+    public static function getToken($username, $password, $timeout = self::DEFAULT_TIMEOUT)
     {
         $response = self::sendTokenRequest($username, $password, $timeout);
         return $response->getToken();
+    }
+
+    /**
+     * @return Model\Account
+     */
+    public function getAccount()
+    {
+        $response = $this->sendAccountRequest(new \JustCommunication\WiracleSDK\API\AccountRequest());
+        return $response->getAccount();
     }
 
     public function __call($name, array $arguments)
@@ -223,6 +236,7 @@ class WiracleClient implements LoggerAwareInterface
 
         $response_string = (string)$response->getBody();
         $response_data = json_decode($response_string, true);
+
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new WiracleAPIException('Unable to decode error response data. Error: ' . json_last_error_msg());
         }

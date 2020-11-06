@@ -18,11 +18,9 @@ $client->setLogger($someLogger);
 ### Токен авторизации
 
 ```php
-$client = new \JustCommunication\WiracleSDK\WiracleClient('', '');
+$token = WiracleClient::getToken($email, $password);
 
-$response = $client->sendTokenRequest(new TokenRequest($email, md5($password)));
-
-print_r($response->getToken());
+print_r($token);
 ```
 
 Так же токен авторизации можно получить через web-интерфейс
@@ -31,9 +29,9 @@ https://wiracle.ru/account/settings/api
 ### Информация об аккаунте и его профилях
 
 ```php
-$response = $client->sendAccountRequest(new AccountRequest());
+$account = $client->getAccount();
 
-print_r($response->getAccount());
+print_r($account);
 ```
 
 ### Список каналов доступных профилю
