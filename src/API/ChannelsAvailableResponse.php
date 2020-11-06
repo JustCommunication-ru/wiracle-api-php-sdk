@@ -1,4 +1,5 @@
 <?php
+
 namespace JustCommunication\WiracleSDK\API;
 
 use JustCommunication\WiracleSDK\Model\Channel;

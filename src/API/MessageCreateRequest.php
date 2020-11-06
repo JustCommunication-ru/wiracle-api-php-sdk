@@ -1,4 +1,5 @@
 <?php
+
 namespace JustCommunication\WiracleSDK\API;
 
 class MessageCreateRequest extends AbstractRequest
@@ -28,8 +29,7 @@ class MessageCreateRequest extends AbstractRequest
         $request
             ->setMessageText($text)
             ->setProfileId($profile_id)
-            ->setChannelId($channel_id)
-        ;
+            ->setChannelId($channel_id);
 
         return $request;
     }

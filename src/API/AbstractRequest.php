@@ -1,4 +1,5 @@
 <?php
+
 namespace JustCommunication\WiracleSDK\API;
 
 abstract class AbstractRequest implements RequestInterface

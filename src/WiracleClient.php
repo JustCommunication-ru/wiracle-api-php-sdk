@@ -1,4 +1,5 @@
 <?php
+
 namespace JustCommunication\WiracleSDK;
 
 use GuzzleHttp\Psr7\Response;
@@ -14,6 +15,8 @@ use Psr\Log\NullLogger;
  *
  * @package WiracleSDK
  *
+ * @method API\TokenResponse sendTokenRequest(API\TokenRequest $request)
+ * @method API\AccountResponse sendAccountRequest(API\AccountRequest $request)
  * @method API\MessageCreateResponse sendMessageCreateRequest(API\MessageCreateRequest $request)
  * @method API\ChannelsAvailableResponse sendChannelsAvailableRequest(API\ChannelsAvailableRequest $request)
  */
@@ -59,7 +62,7 @@ class WiracleClient implements LoggerAwareInterface
     public function __call($name, array $arguments)
     {
         if (0 === \strpos($name, 'send')) {
-            return call_user_func_array([ $this, 'sendRequest' ], $arguments);
+            return call_user_func_array([$this, 'sendRequest'], $arguments);
         }
 
         throw new \BadMethodCallException(\sprintf('Method [%s] not found in [%s].', $name, __CLASS__));

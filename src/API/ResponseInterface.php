@@ -1,4 +1,5 @@
 <?php
+
 namespace JustCommunication\WiracleSDK\API;
 
 interface ResponseInterface
@@ -9,5 +10,5 @@ interface ResponseInterface
      *
      * @throws WiracleAPIException
      */
-    public function setResponseData(Array $data);
+    public function setResponseData(array $data);
 }

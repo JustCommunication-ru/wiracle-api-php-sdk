@@ -1,4 +1,5 @@
 <?php
+
 namespace JustCommunication\WiracleSDK\API;
 
 class MessageCreateResponse extends AbstractResponse
@@ -26,6 +27,7 @@ class MessageCreateResponse extends AbstractResponse
         }
 
         $this->id = $data['result']['id'];
+
         parent::setResponseData($data);
     }
 }
