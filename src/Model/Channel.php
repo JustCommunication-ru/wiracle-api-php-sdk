@@ -1,4 +1,5 @@
 <?php
+
 namespace JustCommunication\WiracleSDK\Model;
 
 class Channel extends AbstractModel

@@ -1,4 +1,5 @@
 <?php
+
 namespace JustCommunication\WiracleSDK\Model;
 
 abstract class AbstractModel

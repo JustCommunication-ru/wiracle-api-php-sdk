@@ -2,9 +2,6 @@
 
 namespace JustCommunication\WiracleSDK\API;
 
-use JustCommunication\WiracleSDK\Model\Channel;
-use JustCommunication\WiracleSDK\Model\Profile;
-
 class TokenResponse extends AbstractResponse
 {
     /**

@@ -1,4 +1,5 @@
 <?php
+
 namespace JustCommunication\WiracleSDK\API;
 
 class ChannelsAvailableRequest extends AbstractRequest

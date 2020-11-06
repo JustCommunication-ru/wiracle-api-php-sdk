@@ -16,6 +16,7 @@ use Psr\Log\NullLogger;
  * @package WiracleSDK
  *
  * @method API\TokenResponse sendTokenRequest(API\TokenRequest $request)
+ * @method API\AccountResponse sendAccountRequest(API\AccountRequest $request)
  * @method API\MessageCreateResponse sendMessageCreateRequest(API\MessageCreateRequest $request)
  * @method API\ChannelsAvailableResponse sendChannelsAvailableRequest(API\ChannelsAvailableRequest $request)
  */
