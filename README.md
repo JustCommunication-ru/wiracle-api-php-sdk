@@ -4,7 +4,7 @@ PHP SDK для Wiracle.ru API
 ## Использование
 
 ```php
-$client = new WiracleClient('username', 'token');
+$client = new WiracleClient('email', 'token');
 ```
 
 В $client можно передать свой `Psr\Logger`
@@ -20,10 +20,7 @@ $client->setLogger($someLogger);
 ```php
 $client = new \JustCommunication\WiracleSDK\WiracleClient('', '');
 
-$email = 'wiracle@example.com';
-$profile_id = md5('password');
-
-$response = $client->sendTokenRequest(new TokenRequest($email, $profile_id));
+$response = $client->sendTokenRequest(new TokenRequest($email, md5($password)));
 
 print_r($response->getToken());
 ```
@@ -42,7 +39,6 @@ print_r($response->getAccount());
 ### Список каналов доступных профилю
 
 ```php
-$profile_id = 123;
 $response = $client->sendChannelsAvailableRequest(new ChannelsAvailableRequest($profile_id));
 
 print_r($response->getProfiles());
