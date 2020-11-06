@@ -4,11 +4,11 @@ namespace JustCommunication\WiracleSDK\API\MessagePart;
 
 abstract class AbstractPartWithContent extends AbstractPart implements PartWithContentInterface
 {
-    public $content;
+    protected $content;
 
     public function __construct($content)
     {
-        $this->content = $content;
+        $this->setContent($content);
     }
 
     public function getContent()
