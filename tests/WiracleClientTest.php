@@ -21,4 +21,10 @@ class WiracleClientTest extends PHPUnit_Framework_TestCase
         $this->expectException(BadMethodCallException::class);
         $client->callSomeUndefinedRequest(new \JustCommunication\WiracleSDK\API\MessageCreateRequest());
     }
+
+    public function testGetToken()
+    {
+        $this->markTestSkipped('Please specify username and password to run this method');
+        $token = WiracleClient::getToken('', '');
+    }
 }

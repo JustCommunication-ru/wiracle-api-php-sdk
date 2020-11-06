@@ -74,7 +74,7 @@ class TokenRequest extends AbstractRequest
         return [
             'form_params' => [
                 'email' => $this->getEmail(),
-                'password' => $this->getPassword()
+                'password' => md5($this->getPassword())
             ]
         ];
     }

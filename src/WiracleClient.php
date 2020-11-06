@@ -5,6 +5,8 @@ namespace JustCommunication\WiracleSDK;
 use GuzzleHttp\Psr7\Response;
 use JustCommunication\WiracleSDK\API\RequestInterface;
 use JustCommunication\WiracleSDK\API\ResponseInterface;
+use JustCommunication\WiracleSDK\API\TokenRequest;
+use JustCommunication\WiracleSDK\API\TokenResponse;
 use JustCommunication\WiracleSDK\API\WiracleAPIException;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -50,13 +52,53 @@ class WiracleClient implements LoggerAwareInterface
         $this->username = $username;
         $this->token = $token;
 
-        $this->httpClient = new \GuzzleHttp\Client([
+        $this->httpClient = self::createHttpClient($timeout);
+
+        $this->logger = new NullLogger();
+    }
+
+    /**
+     * @param int $timeout
+     * @return \GuzzleHttp\Client
+     */
+    protected static function createHttpClient($timeout = 10)
+    {
+        return new \GuzzleHttp\Client([
             'base_uri' => 'https://wiracle.ru/',
             'connect_timeout' => 4,
             'timeout' => $timeout
         ]);
+    }
 
-        $this->logger = new NullLogger();
+    /**
+     * Get token
+     *
+     * @param string $username
+     * @param string $password
+     * @param int $timeout
+     * @return TokenResponse
+     *
+     * @throws WiracleAPIException
+     */
+    public static function getToken($username, $password, $timeout = 10)
+    {
+        $httpClient = self::createHttpClient($timeout);
+
+        try {
+            $request = new TokenRequest($username, $password);
+            $httpResponse = $httpClient->request($request->getHttpMethod(), $request->getUri(), $request->createHttpClientParams());
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            self::handleErrorResponse($e->getResponse());
+
+            throw new WiracleAPIException('Wiracle API request error: ' . $e->getMessage());
+        } catch (\GuzzleHttp\Exception\GuzzleException $e) {
+            throw new WiracleAPIException('Wiracle API error: ' . $e->getMessage());
+        }
+
+        /** @var TokenResponse $response */
+        $response = self::createAPIResponse($httpResponse, $request->getResponseClass());
+
+        return $response;
     }
 
     public function __call($name, array $arguments)
@@ -76,39 +118,16 @@ class WiracleClient implements LoggerAwareInterface
      */
     public function sendRequest(RequestInterface $request)
     {
-        /** @var Response $response */
-        $response = $this->createAPIRequestPromise($request)->wait();
-        return $this->createAPIResponse($response, $request->getResponseClass());
-    }
+        try {
+            /** @var Response $response */
+            $response = $this->createAPIRequestPromise($request)->wait();
+        } catch (\GuzzleHttp\Exception\BadResponseException $e) {
+            self::handleErrorResponse($e->getResponse(), $this->logger);
 
-    /**
-     * @param Response $response
-     * @param string $apiResponseClass
-     *
-     * @return ResponseInterface
-     *
-     * @throws WiracleAPIException
-     */
-    protected function createAPIResponse(Response $response, $apiResponseClass)
-    {
-        $response_string = (string)$response->getBody();
-        $response_data = json_decode($response_string, true);
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new WiracleAPIException('Invalid response data');
+            throw new WiracleAPIException('Wiracle API Request error: ' . $e->getMessage());
         }
 
-        if (isset($response_data['code'], $response_data['message'])) {
-            throw new WiracleAPIException('Wiracle API Error: ' . $response_data['message'], $response_data['code']);
-        }
-
-        $response = new $apiResponseClass;
-        if (!$response instanceof ResponseInterface) {
-            throw new WiracleAPIException('Invalid response class');
-        }
-
-        $response->setResponseData($response_data);
-
-        return $response;
+        return self::createAPIResponse($response, $request->getResponseClass());
     }
 
     public function createAPIRequestPromise(RequestInterface $request)
@@ -146,5 +165,56 @@ class WiracleClient implements LoggerAwareInterface
             $nonce,
             $created
         );
+    }
+
+    /**
+     * @param \Psr\Http\Message\ResponseInterface $response
+     * @param string $apiResponseClass
+     *
+     * @return ResponseInterface
+     *
+     * @throws WiracleAPIException
+     */
+    protected static function createAPIResponse(\Psr\Http\Message\ResponseInterface $response, $apiResponseClass)
+    {
+        $response_string = (string)$response->getBody();
+        $response_data = json_decode($response_string, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new WiracleAPIException('Invalid response data');
+        }
+
+        if (isset($response_data['code'], $response_data['message'])) {
+            throw new WiracleAPIException('Wiracle API Error: ' . $response_data['message'], $response_data['code']);
+        }
+
+        $response = new $apiResponseClass;
+        if (!$response instanceof ResponseInterface) {
+            throw new WiracleAPIException('Invalid response class');
+        }
+
+        $response->setResponseData($response_data);
+
+        return $response;
+    }
+
+    /**
+     * @param \Psr\Http\Message\ResponseInterface|null $response
+     * @throws WiracleAPIException
+     */
+    protected static function handleErrorResponse(\Psr\Http\Message\ResponseInterface $response = null, \Psr\Log\LoggerInterface $logger = null)
+    {
+        if (!$response) {
+            return;
+        }
+
+        $response_string = (string)$response->getBody();
+        $response_data = json_decode($response_string, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new WiracleAPIException('Unable to decode error response data. Error: ' . json_last_error_msg());
+        }
+
+        if (isset($response_data['code'], $response_data['message'])) {
+            throw new WiracleAPIException('Wiracle API Error: ' . $response_data['message'], $response_data['code']);
+        }
     }
 }
