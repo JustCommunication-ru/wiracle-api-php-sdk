@@ -27,4 +27,12 @@ class WiracleClientTest extends PHPUnit_Framework_TestCase
         $this->markTestSkipped('Please specify username and password to run this method');
         $token = WiracleClient::getToken('', '');
     }
+
+    public function testGetAccount()
+    {
+        $this->markTestSkipped('Please specify username and token to run this method');
+        $client = new WiracleClient('', '');
+
+        $this->assertEquals(\JustCommunication\WiracleSDK\Model\Account::class, get_class($client->getAccount()));
+    }
 }
