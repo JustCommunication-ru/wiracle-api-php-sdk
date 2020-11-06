@@ -80,7 +80,7 @@ class WiracleClient implements LoggerAwareInterface
      *
      * @throws WiracleAPIException
      */
-    public static function getToken($username, $password, $timeout = 10)
+    public static function sendTokenRequest($username, $password, $timeout = 10)
     {
         $httpClient = self::createHttpClient($timeout);
 
@@ -99,6 +99,20 @@ class WiracleClient implements LoggerAwareInterface
         $response = self::createAPIResponse($httpResponse, $request->getResponseClass());
 
         return $response;
+    }
+
+    /**
+     * @param $username
+     * @param $password
+     * @param $timeout
+     * @return string
+     * 
+     * @throws WiracleAPIException
+     */
+    public static function getToken($username, $password, $timeout)
+    {
+        $response = self::sendTokenRequest($username, $password, $timeout);
+        return $response->getToken();
     }
 
     public function __call($name, array $arguments)
