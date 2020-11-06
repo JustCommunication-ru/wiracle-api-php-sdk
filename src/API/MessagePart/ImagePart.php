@@ -2,7 +2,7 @@
 
 namespace JustCommunication\WiracleSDK\API\MessagePart;
 
-class ImagePart extends AbstractPart
+class ImagePart extends AbstractPartWithContent
 {
     const TYPE = 'image';
 
@@ -19,8 +19,6 @@ class ImagePart extends AbstractPart
 
     public function toArray()
     {
-        $array = parent::toArray();
-
-        return array_merge($array, ['width' => $this->width, 'height' => $this->height]);
+        return array_merge(parent::toArray(), ['width' => $this->width, 'height' => $this->height]);
     }
 }

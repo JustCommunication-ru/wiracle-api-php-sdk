@@ -2,15 +2,10 @@
 
 namespace JustCommunication\WiracleSDK\API\MessagePart;
 
-interface PartInterface
+interface PartWithContentInterface extends PartInterface
 {
     /**
      * @return string
      */
     public function getType();
-
-    /**
-     * @return array
-     */
-    public function toArray();
 }

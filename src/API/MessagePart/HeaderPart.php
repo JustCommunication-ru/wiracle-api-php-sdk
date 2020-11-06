@@ -2,7 +2,7 @@
 
 namespace JustCommunication\WiracleSDK\API\MessagePart;
 
-class HeaderPart extends AbstractPart
+class HeaderPart extends AbstractPartWithContent
 {
     const TYPE = 'header';
 }
