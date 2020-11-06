@@ -18,7 +18,7 @@ abstract class AbstractPartWithContent extends AbstractPart implements PartWithC
 
     public function toArray()
     {
-        return [parent::toArray(), 'content' => $this->getContent()];
+        return array_merge(parent::toArray(), ['content' => $this->getContent()]);
     }
 }
 
