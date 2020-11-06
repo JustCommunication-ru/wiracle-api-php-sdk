@@ -7,5 +7,5 @@ interface PartWithContentInterface extends PartInterface
     /**
      * @return string
      */
-    public function getType();
+    public function getContent();
 }
