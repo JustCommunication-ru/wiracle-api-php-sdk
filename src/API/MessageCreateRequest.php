@@ -23,11 +23,27 @@ class MessageCreateRequest extends AbstractRequest
      */
     protected $message_text;
 
+    /**
+     * @var array
+     */
+    protected $message_parts;
+
     static function withPlainText($profile_id, $channel_id, $text)
     {
         $request = new self();
         $request
             ->setMessageText($text)
+            ->setProfileId($profile_id)
+            ->setChannelId($channel_id);
+
+        return $request;
+    }
+
+    static function withParts($profile_id, $channel_id, MessagePart\Message $message)
+    {
+        $request = new self();
+        $request
+            ->setMessageText($message->toArray())
             ->setProfileId($profile_id)
             ->setChannelId($channel_id);
 
@@ -89,6 +105,24 @@ class MessageCreateRequest extends AbstractRequest
     }
 
     /**
+     * @return array
+     */
+    public function getMessageParts()
+    {
+        return $this->message_parts;
+    }
+
+    /**
+     * @param array $message_parts
+     * @return MessageCreateRequest
+     */
+    public function setMessageParts($message_parts)
+    {
+        $this->message_parts = $message_parts;
+        return $this;
+    }
+
+    /**
      * @inheritDoc
      */
     public function createHttpClientParams()
@@ -102,6 +136,10 @@ class MessageCreateRequest extends AbstractRequest
 
         if ($this->message_text) {
             $params['form_params']['message'] = $this->message_text;
+        }
+
+        if ($this->message_parts) {
+            $params['form_params']['message'] = $this->message_parts;
         }
 
         return $params;
