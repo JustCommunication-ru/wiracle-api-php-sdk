@@ -8,7 +8,9 @@ $client = new WiracleClient('email', 'token');
 ```
 
 `email` — email пользователя на wiracle.ru
-`token` — аутентификационный токен. Токен можно получить через web-интерфейс https://wiracle.ru/account/settings/api, либо методом `WiracleClient::getToken($email, $password)`
+
+`token` — аутентификационный токен. 
+Токен можно получить через web-интерфейс https://wiracle.ru/account/settings/api, либо методом `WiracleClient::getToken($email, $password)`
 
 ## Методы
 
