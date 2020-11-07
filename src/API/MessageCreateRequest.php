@@ -2,6 +2,8 @@
 
 namespace JustCommunication\WiracleSDK\API;
 
+use JustCommunication\WiracleSDK\API\Model\Message\Message;
+
 class MessageCreateRequest extends AbstractRequest
 {
     const URI = '/api/post/add';
@@ -39,7 +41,7 @@ class MessageCreateRequest extends AbstractRequest
         return $request;
     }
 
-    static function withParts($profile_id, $channel_id, MessagePart\Message $message)
+    static function withParts($profile_id, $channel_id, Message $message)
     {
         $request = new self();
         $request
@@ -136,9 +138,7 @@ class MessageCreateRequest extends AbstractRequest
 
         if ($this->message_text) {
             $params['form_params']['message'] = $this->message_text;
-        }
-
-        if ($this->message_parts) {
+        } else if ($this->message_parts) {
             $params['form_params']['message'] = $this->message_parts;
         }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace JustCommunication\WiracleSDK\API\MessagePart;
+namespace JustCommunication\WiracleSDK\Model\Message;
 
 class HeaderPart extends AbstractPartWithContent
 {
