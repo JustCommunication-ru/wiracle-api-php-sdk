@@ -2,7 +2,7 @@
 
 namespace JustCommunication\WiracleSDK\API;
 
-use JustCommunication\WiracleSDK\API\Model\Message\Message;
+use JustCommunication\WiracleSDK\Model\Message\Message;
 
 class MessageCreateRequest extends AbstractRequest
 {

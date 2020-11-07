@@ -39,10 +39,26 @@ $response = $client->sendChannelsAvailableRequest(new ChannelsAvailableRequest($
 print_r($response->getProfiles());
 ```
 
-### Отправить сообщение
+### Отправить простое текстовое сообщение
 
 ```php
 $response = $client->sendMessageCreateRequest(MessageCreateRequest::withPlainText($profile_id, $channel_id, $text));
+
+// идентификатор нового сообщения
+print_r($response->getId());
+```
+
+### Отправить составное сообщение
+
+```php
+$message = new Message();
+
+$message->addPart(new HeaderPart('Header'));
+$message->addPart(new TextPart('Test'));
+$message->addPart(new ImagePart('https://wiracle.ru/images/app_banner/512x512.png', 512, 512));
+$message->addPart(new TextPart('Test 2'));
+
+$response = $client->sendMessageCreateRequest(MessageCreateRequest::withParts($profile_id, $channel_id, $message));
 
 // идентификатор нового сообщения
 print_r($response->getId());
