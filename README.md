@@ -7,11 +7,10 @@ PHP SDK для Wiracle.ru API
 $client = new WiracleClient('email', 'token');
 ```
 
-В $client можно передать свой `Psr\Logger`
+`email` — email пользователя на wiracle.ru
 
-```php
-$client->setLogger($someLogger);
-```
+`token` — аутентификационный токен. 
+Токен можно получить через web-интерфейс https://wiracle.ru/account/settings/api, либо методом `WiracleClient::getToken($email, $password)`
 
 ## Методы
 
@@ -78,3 +77,13 @@ try {
     $logger->error('Wiracle ERROR: ' . $e->getMessage());
 }
 ```
+
+## Логирование
+
+В $client можно передать свой `Psr\Logger`.
+
+```php
+$client->setLogger($someLogger);
+```
+
+По-умолчанию, логирование отключено.

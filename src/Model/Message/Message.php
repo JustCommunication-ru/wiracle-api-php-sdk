@@ -7,11 +7,17 @@ class Message
     /**
      * @var PartInterface[]
      */
-    public $parts = [];
+    protected $parts = [];
 
+    /**
+     * @param PartInterface $part
+     * @return $this
+     */
     public function addPart(PartInterface $part)
     {
         $this->parts[] = $part;
+
+        return $this;
     }
 
     public function toArray()
@@ -25,4 +31,3 @@ class Message
         return $array;
     }
 }
-

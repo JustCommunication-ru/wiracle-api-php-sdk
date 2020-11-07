@@ -158,7 +158,15 @@ class WiracleClient implements LoggerAwareInterface
 
     public function createAPIRequestPromise(RequestInterface $request)
     {
-        $params = array_merge_recursive($request->createHttpClientParams(), [
+        $request_params = $request->createHttpClientParams();
+
+        $this->logger->debug('Wiracle API request {method} {uri}', [
+            'method' => $request->getHttpMethod(),
+            'uri' => $request->getUri(),
+            'request_params' => $request_params
+        ]);
+
+        $request_params = array_merge_recursive($request_params, [
             'headers' => [
                 'X-WSSE' => $this->generateWsseHeader()
             ]
@@ -176,7 +184,7 @@ class WiracleClient implements LoggerAwareInterface
         $params['handler'] = $stack;
         */
 
-        return $this->httpClient->requestAsync($request->getHttpMethod(), $request->getUri(), $params);
+        return $this->httpClient->requestAsync($request->getHttpMethod(), $request->getUri(), $request_params);
     }
 
     protected function generateWsseHeader()
