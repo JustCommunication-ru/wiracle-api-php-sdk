@@ -3,6 +3,8 @@
 namespace JustCommunication\WiracleSDK\API;
 
 use JustCommunication\WiracleSDK\Model\Message\Message;
+use JustCommunication\WiracleSDK\Model\Message\TextPart;
+use JustCommunication\WiracleSDK\Model\Message\ImagePart;
 
 class MessageCreateRequest extends AbstractRequest
 {
@@ -21,20 +23,32 @@ class MessageCreateRequest extends AbstractRequest
     protected $channel_id;
 
     /**
-     * @var string
+     * @var Message
      */
-    protected $message_text;
-
-    /**
-     * @var array
-     */
-    protected $message_parts;
+    protected $message;
 
     static function withPlainText($profile_id, $channel_id, $text)
     {
+        $message = new Message();
+        $message->addPart(new TextPart($text));
+
         $request = new self();
         $request
-            ->setMessageText($text)
+            ->setMessage($message)
+            ->setProfileId($profile_id)
+            ->setChannelId($channel_id);
+
+        return $request;
+    }
+
+    static function withImage($profile_id, $channel_id, $src, $width = null, $height = null)
+    {
+        $message = new Message();
+        $message->addPart(new ImagePart($src, $width, $height));
+
+        $request = new self();
+        $request
+            ->setMessage($message)
             ->setProfileId($profile_id)
             ->setChannelId($channel_id);
 
@@ -45,7 +59,7 @@ class MessageCreateRequest extends AbstractRequest
     {
         $request = new self();
         $request
-            ->setMessageText($message->toArray())
+            ->setMessage($message)
             ->setProfileId($profile_id)
             ->setChannelId($channel_id);
 
@@ -89,38 +103,20 @@ class MessageCreateRequest extends AbstractRequest
     }
 
     /**
-     * @return mixed
+     * @return Message
      */
-    public function getMessageText()
+    public function getMessage()
     {
-        return $this->message_text;
+        return $this->message;
     }
 
     /**
-     * @param mixed $message_text
+     * @param Message $message
      * @return MessageCreateRequest
      */
-    public function setMessageText($message_text)
+    public function setMessage($message)
     {
-        $this->message_text = $message_text;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getMessageParts()
-    {
-        return $this->message_parts;
-    }
-
-    /**
-     * @param array $message_parts
-     * @return MessageCreateRequest
-     */
-    public function setMessageParts($message_parts)
-    {
-        $this->message_parts = $message_parts;
+        $this->message = $message;
         return $this;
     }
 
@@ -136,10 +132,8 @@ class MessageCreateRequest extends AbstractRequest
             ]
         ];
 
-        if ($this->message_text) {
-            $params['form_params']['message'] = $this->message_text;
-        } else if ($this->message_parts) {
-            $params['form_params']['message'] = $this->message_parts;
+        if ($this->message) {
+            $params['form_params']['message'] = $this->message->toArray();
         }
 
         return $params;
