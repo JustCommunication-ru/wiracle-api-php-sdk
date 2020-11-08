@@ -67,6 +67,8 @@ $response = $client->sendMessageCreateRequest(MessageCreateRequest::withParts($p
 print_r($response->getId());
 ```
 
+Сообщения поддерживают inline markdown такие как: **bold text**, *italic text*, [link](https://github.com/JustCommunication-ru/wiracle-api-php-sdk) и тд.
+
 ## Обработка ошибок
 
 При ошибке будет сгенерировано исключение ```WiracleAPIException```
