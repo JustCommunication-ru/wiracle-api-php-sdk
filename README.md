@@ -33,7 +33,17 @@ $account = $client->getAccount();
 print_r($account);
 ```
 
+### Список каналов профиля
+
+```php
+$response = $client->sendChannelsRequest(new ChannelsRequest($profile_id));
+
+print_r($response->getChannels());
+```
+
 ### Список каналов доступных профилю
+
+Каналы всех профилей на страницу которых можно добавлять сообщения (включая собственные)
 
 ```php
 $response = $client->sendChannelsAvailableRequest(new ChannelsAvailableRequest($profile_id));
