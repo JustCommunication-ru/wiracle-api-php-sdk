@@ -50,6 +50,16 @@ $response = $client->sendMessageCreateRequest(MessageCreateRequest::withPlainTex
 print_r($response->getId());
 ```
 
+### Отправить изображение
+
+```php
+// $width, $height не обязательные поля
+$response = $client->sendMessageCreateRequest(MessageCreateRequest::withImage($profile_id, $channel_id, $src, $width, $height));
+
+// идентификатор нового сообщения
+print_r($response->getId());
+```
+
 ### Отправить составное сообщение
 
 ```php
