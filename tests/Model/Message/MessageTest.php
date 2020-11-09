@@ -7,15 +7,7 @@ class MessageTest extends TestCase
 {
     public function testMessageWithParts()
     {
-        $message = new Message();
-        $message
-            ->addPart(new \JustCommunication\WiracleSDK\Model\Message\TextPart('Test string'))
-            ->addPart(new \JustCommunication\WiracleSDK\Model\Message\ImagePart('https://wiracle.ru/logo.png', 100, 200))
-            ->addPart(new \JustCommunication\WiracleSDK\Model\Message\CutlinePart())
-            ->addPart(new \JustCommunication\WiracleSDK\Model\Message\HeaderPart('I am a header'))
-        ;
-
-        $this->assertEquals([
+        $expected_parts = [
             [
                 'type' => 'text',
                 'content' => 'Test string'
@@ -33,6 +25,25 @@ class MessageTest extends TestCase
                 'type' => 'header',
                 'content' => 'I am a header'
             ]
-        ], $message->toArray());
+        ];
+
+        $message = new Message();
+        $message
+            ->addPart(new \JustCommunication\WiracleSDK\Model\Message\TextPart('Test string'))
+            ->addPart(new \JustCommunication\WiracleSDK\Model\Message\ImagePart('https://wiracle.ru/logo.png', 100, 200))
+            ->addPart(new \JustCommunication\WiracleSDK\Model\Message\CutlinePart())
+            ->addPart(new \JustCommunication\WiracleSDK\Model\Message\HeaderPart('I am a header'))
+        ;
+
+        $this->assertEquals($expected_parts, $message->toArray());
+
+        $message = new Message([
+            new \JustCommunication\WiracleSDK\Model\Message\TextPart('Test string'),
+            new \JustCommunication\WiracleSDK\Model\Message\ImagePart('https://wiracle.ru/logo.png', 100, 200),
+            new \JustCommunication\WiracleSDK\Model\Message\CutlinePart(),
+            new \JustCommunication\WiracleSDK\Model\Message\HeaderPart('I am a header')
+        ]);
+
+        $this->assertEquals($expected_parts, $message->toArray());
     }
 }

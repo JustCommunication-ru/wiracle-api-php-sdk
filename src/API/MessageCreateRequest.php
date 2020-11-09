@@ -29,41 +29,45 @@ class MessageCreateRequest extends AbstractRequest
 
     static function withPlainText($profile_id, $channel_id, $text)
     {
-        $message = new Message();
-        $message->addPart(new TextPart($text));
+        $message = new Message([
+            new TextPart($text)
+        ]);
 
-        $request = new self();
-        $request
-            ->setMessage($message)
-            ->setProfileId($profile_id)
-            ->setChannelId($channel_id);
-
-        return $request;
+        return self::withMessage($profile_id, $channel_id, $message);
     }
 
     static function withImage($profile_id, $channel_id, $src, $width = null, $height = null)
     {
-        $message = new Message();
-        $message->addPart(new ImagePart($src, $width, $height));
+        $message = new Message([
+            new ImagePart($src, $width, $height)
+        ]);
 
-        $request = new self();
-        $request
-            ->setMessage($message)
-            ->setProfileId($profile_id)
-            ->setChannelId($channel_id);
-
-        return $request;
+        return self::withMessage($profile_id, $channel_id, $message);
     }
 
-    static function withParts($profile_id, $channel_id, Message $message)
+    static function withMessage($profile_id, $channel_id, Message $message)
     {
         $request = new self();
         $request
             ->setMessage($message)
             ->setProfileId($profile_id)
-            ->setChannelId($channel_id);
+            ->setChannelId($channel_id)
+        ;
 
         return $request;
+    }
+
+    /**
+     * @param $profile_id
+     * @param $channel_id
+     * @param Message $message
+     * @return MessageCreateRequest
+     *
+     * @deprecated use MessageCreateRequest::withMessage method
+     */
+    static function withParts($profile_id, $channel_id, Message $message)
+    {
+        return self::withMessage($profile_id, $channel_id, $message);
     }
 
     /**

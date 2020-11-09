@@ -10,6 +10,42 @@ class Message
     protected $parts = [];
 
     /**
+     * Message constructor.
+     * @param PartInterface[]|null $parts
+     */
+    public function __construct(array $parts = null)
+    {
+        if ($parts) {
+            $this->setParts($parts);
+        }
+    }
+
+    /**
+     * @param PartInterface[] $parts
+     * @return $this
+     */
+    public function setParts(array $parts)
+    {
+        $this->parts = [];
+        $this->addParts($parts);
+
+        return $this;
+    }
+
+    /**
+     * @param PartInterface[] $parts
+     * @return $this
+     */
+    public function addParts(array $parts)
+    {
+        foreach ($parts as $part) {
+            $this->addPart($part);
+        }
+
+        return $this;
+    }
+
+    /**
      * @param PartInterface $part
      * @return $this
      */

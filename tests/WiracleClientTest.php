@@ -4,6 +4,24 @@ use JustCommunication\WiracleSDK\WiracleClient;
 
 class WiracleClientTest extends PHPUnit_Framework_TestCase
 {
+    public function testCallUndefinedMethod()
+    {
+        $client = new WiracleClient('username', 'token');
+
+        $this->expectException(BadMethodCallException::class);
+        $client->callSomeUndefinedRequest(new \JustCommunication\WiracleSDK\API\MessageCreateRequest());
+    }
+
+    public function testWiracleException()
+    {
+        $client = new WiracleClient('username', 'token');
+
+        $this->expectException(\JustCommunication\WiracleSDK\API\WiracleAPIException::class);
+        $this->expectExceptionMessage('Wiracle API Error: Unknown token key');
+
+        $client->sendChannelsAvailableRequest(new \JustCommunication\WiracleSDK\API\ChannelsAvailableRequest(1));
+    }
+
     public function testCreateChannelsAvailableRequest()
     {
         $client = new WiracleClient('username', 'token');
@@ -12,14 +30,6 @@ class WiracleClientTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('GET', $request->getHttpMethod());
         $this->assertEquals('/api/profile/channels/available', $request->getUri());
         $this->assertEquals(\JustCommunication\WiracleSDK\API\ChannelsAvailableResponse::class, $request->getResponseClass());
-    }
-
-    public function testCallUndefinedMethod()
-    {
-        $client = new WiracleClient('username', 'token');
-
-        $this->expectException(BadMethodCallException::class);
-        $client->callSomeUndefinedRequest(new \JustCommunication\WiracleSDK\API\MessageCreateRequest());
     }
 
     public function testGetToken()
