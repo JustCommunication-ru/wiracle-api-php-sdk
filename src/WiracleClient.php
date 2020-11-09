@@ -19,6 +19,7 @@ use Psr\Log\NullLogger;
  *
  * @method API\AccountResponse sendAccountRequest(API\AccountRequest $request)
  * @method API\MessageCreateResponse sendMessageCreateRequest(API\MessageCreateRequest $request)
+ * @method API\ChannelsResponse sendChannelsRequest(API\ChannelsRequest $request)
  * @method API\ChannelsAvailableResponse sendChannelsAvailableRequest(API\ChannelsAvailableRequest $request)
  */
 class WiracleClient implements LoggerAwareInterface
