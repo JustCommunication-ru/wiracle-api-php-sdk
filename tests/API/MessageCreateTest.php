@@ -78,4 +78,50 @@ class MessageCreateTest extends TestCase
             ]
         ], $messageCreateRequest->createHttpClientParams());
     }
+
+    public function testMessageCreateComplexWithParts()
+    {
+        $message = new JustCommunication\WiracleSDK\Model\Message\Message([
+            new JustCommunication\WiracleSDK\Model\Message\HeaderPart('Header'),
+            new JustCommunication\WiracleSDK\Model\Message\TextPart('Text')
+        ]);
+
+        $message
+            ->addPart(new JustCommunication\WiracleSDK\Model\Message\ImagePart('https://wiracle.ru/images/app_banner/512x512.png', 512, 512))
+            ->addPart(new JustCommunication\WiracleSDK\Model\Message\CutlinePart())
+            ->addPart(new JustCommunication\WiracleSDK\Model\Message\TextPart('Text 2'))
+        ;
+
+        $messageCreateRequest = MessageCreateRequest::withMessage(1, 1, $message);
+
+        $this->assertEquals([
+            'form_params' => [
+                'profile_id' => 1,
+                'channel_id' => 1,
+                'message' => [
+                    [
+                        'type' => 'header',
+                        'content' => 'Header'
+                    ],
+                    [
+                        'type' => 'text',
+                        'content' => 'Text'
+                    ],
+                    [
+                        'type' => 'image',
+                        'content' => 'https://wiracle.ru/images/app_banner/512x512.png',
+                        'width' => 512,
+                        'height' => 512
+                    ],
+                    [
+                        'type' => 'cutline',
+                    ],
+                    [
+                        'type' => 'text',
+                        'content' => 'Text 2'
+                    ]
+                ]
+            ]
+        ], $messageCreateRequest->createHttpClientParams());
+    }
 }

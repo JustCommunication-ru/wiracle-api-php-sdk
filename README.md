@@ -73,15 +73,18 @@ print_r($response->getId());
 ### Отправить составное сообщение
 
 ```php
-$message = new Message();
+$message = new Message([
+    new HeaderPart('Header'),
+    new TextPart('Text')
+]);
 
-$message->addPart(new HeaderPart('Header'));
-$message->addPart(new TextPart('Text'));
-$message->addPart(new ImagePart('https://wiracle.ru/images/app_banner/512x512.png', 512, 512));
-$message->addPart(new CutlinePart());
-$message->addPart(new TextPart('Text 2'));
+$message
+    ->addPart(new ImagePart('https://wiracle.ru/images/app_banner/512x512.png', 512, 512))
+    ->addPart(new CutlinePart())
+    ->addPart(new TextPart('Text 2'))
+;
 
-$response = $client->sendMessageCreateRequest(MessageCreateRequest::withParts($profile_id, $channel_id, $message));
+$response = $client->sendMessageCreateRequest(MessageCreateRequest::withMessage($profile_id, $channel_id, $message));
 
 // идентификатор нового сообщения
 print_r($response->getId());

@@ -13,12 +13,12 @@ class MessageCreateRequest extends AbstractRequest
     const RESPONSE_CLASS = MessageCreateResponse::class;
 
     /**
-     * @var string
+     * @var int
      */
     protected $profile_id;
 
     /**
-     * @var string
+     * @var int
      */
     protected $channel_id;
 
@@ -27,6 +27,13 @@ class MessageCreateRequest extends AbstractRequest
      */
     protected $message;
 
+    /**
+     * @param int $profile_id
+     * @param int $channel_id
+     * @param string $text
+     *
+     * @return MessageCreateRequest
+     */
     static function withPlainText($profile_id, $channel_id, $text)
     {
         $message = new Message([
@@ -36,6 +43,15 @@ class MessageCreateRequest extends AbstractRequest
         return self::withMessage($profile_id, $channel_id, $message);
     }
 
+    /**
+     * @param int $profile_id
+     * @param int $channel_id
+     * @param string $src
+     * @param int|null $width
+     * @param int|null $height
+     *
+     * @return MessageCreateRequest
+     */
     static function withImage($profile_id, $channel_id, $src, $width = null, $height = null)
     {
         $message = new Message([
@@ -45,6 +61,13 @@ class MessageCreateRequest extends AbstractRequest
         return self::withMessage($profile_id, $channel_id, $message);
     }
 
+    /**
+     * @param int $profile_id
+     * @param int $channel_id
+     * @param Message $message
+     *
+     * @return MessageCreateRequest
+     */
     static function withMessage($profile_id, $channel_id, Message $message)
     {
         $request = new self();
@@ -58,8 +81,8 @@ class MessageCreateRequest extends AbstractRequest
     }
 
     /**
-     * @param $profile_id
-     * @param $channel_id
+     * @param int $profile_id
+     * @param int $channel_id
      * @param Message $message
      * @return MessageCreateRequest
      *
@@ -71,7 +94,7 @@ class MessageCreateRequest extends AbstractRequest
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getProfileId()
     {
@@ -79,7 +102,7 @@ class MessageCreateRequest extends AbstractRequest
     }
 
     /**
-     * @param string $profile_id
+     * @param int $profile_id
      * @return MessageCreateRequest
      */
     public function setProfileId($profile_id)
@@ -89,7 +112,7 @@ class MessageCreateRequest extends AbstractRequest
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getChannelId()
     {
@@ -97,7 +120,7 @@ class MessageCreateRequest extends AbstractRequest
     }
 
     /**
-     * @param string $channel_id
+     * @param int $channel_id
      * @return MessageCreateRequest
      */
     public function setChannelId($channel_id)
