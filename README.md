@@ -1,4 +1,7 @@
 # Wiracle API PHP SDK
+
+[![Latest Stable Version](https://poser.pugx.org/justcommunication-ru/wiracle-api-php-sdk/v)](//packagist.org/packages/justcommunication-ru/wiracle-api-php-sdk) [![Total Downloads](https://poser.pugx.org/justcommunication-ru/wiracle-api-php-sdk/downloads)](//packagist.org/packages/justcommunication-ru/wiracle-api-php-sdk) 
+
 PHP SDK для Wiracle.ru API
 
 ## Использование
