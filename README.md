@@ -4,6 +4,10 @@
 
 PHP SDK для Wiracle.ru API
 
+## Установка
+
+`composer require justcommunication-ru/wiracle-api-php-sdk`
+
 ## Использование
 
 ```php
