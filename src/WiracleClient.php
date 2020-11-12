@@ -28,7 +28,7 @@ class WiracleClient implements LoggerAwareInterface
 
     const API_ENDPOINT = 'https://wiracle.ru/';
 
-    const DEFAULT_OPTIONS = [
+    const DEFAULT_HTTP_CLIENT_OPTIONS = [
         'connect_timeout' => 4,
         'timeout' => 10
     ];
@@ -53,25 +53,31 @@ class WiracleClient implements LoggerAwareInterface
      *
      * @param string $username
      * @param string $token
-     * @param array $httpClientOptions
+     * @param array|\GuzzleHttp\Client $httpClientOrOptions
      */
-    public function __construct($username, $token, array $httpClientOptions = self::DEFAULT_OPTIONS)
+    public function __construct($username, $token, $httpClientOrOptions = self::DEFAULT_HTTP_CLIENT_OPTIONS)
     {
         $this->username = $username;
         $this->token = $token;
 
-        $this->httpClient = self::createHttpClient($httpClientOptions);
+        $this->httpClient = self::createHttpClient($httpClientOrOptions);
 
         $this->logger = new NullLogger();
     }
 
     /**
-     * @param array $httpClientOptions
+     * @param array $http_client_options
      * @return \GuzzleHttp\Client
      */
-    protected static function createHttpClient(array $httpClientOptions = self::DEFAULT_OPTIONS)
+    protected static function createHttpClient($httpClientOrOptions = self::DEFAULT_HTTP_CLIENT_OPTIONS)
     {
-        return new \GuzzleHttp\Client($httpClientOptions);
+        if (is_array($httpClientOrOptions)) {
+            $httpClient = new \GuzzleHttp\Client($httpClientOrOptions);
+        } else {
+            $httpClient = $httpClientOrOptions;
+        }
+
+        return $httpClient;
     }
 
     /**
@@ -79,14 +85,14 @@ class WiracleClient implements LoggerAwareInterface
      *
      * @param string $username
      * @param string $password
-     * @param array $httpClientOptions
+     * @param array|\GuzzleHttp\Client $httpClientOrOptions
      * @return TokenResponse
      *
      * @throws WiracleAPIException
      */
-    public static function sendTokenRequest($username, $password, array $httpClientOptions = self::DEFAULT_OPTIONS)
+    public static function sendTokenRequest($username, $password, $httpClientOrOptions = self::DEFAULT_HTTP_CLIENT_OPTIONS)
     {
-        $httpClient = self::createHttpClient($httpClientOptions);
+        $httpClient = self::createHttpClient($httpClientOrOptions);
 
         try {
             $request = new TokenRequest($username, $password);
@@ -106,24 +112,35 @@ class WiracleClient implements LoggerAwareInterface
     }
 
     /**
+     * @return \GuzzleHttp\Client
+     */
+    public function getHttpClient()
+    {
+        return $this->httpClient;
+    }
+
+    /**
      * @param \GuzzleHttp\Client $httpClient
+     *
+     * @return $this
      */
     public function setHttpClient(\GuzzleHttp\Client $httpClient)
     {
         $this->httpClient = $httpClient;
+        return $this;
     }
 
     /**
      * @param $username
      * @param $password
-     * @param array $httpClientOptions
+     * @param array|\GuzzleHttp\Client $httpClientOrOptions
      * @return string
      *
      * @throws WiracleAPIException
      */
-    public static function getToken($username, $password, array $httpClientOptions = self::DEFAULT_OPTIONS)
+    public static function getToken($username, $password, $httpClientOrOptions = self::DEFAULT_HTTP_CLIENT_OPTIONS)
     {
-        $response = self::sendTokenRequest($username, $password, $httpClientOptions);
+        $response = self::sendTokenRequest($username, $password, $httpClientOrOptions);
         return $response->getToken();
     }
 

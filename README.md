@@ -111,6 +111,49 @@ try {
 }
 ```
 
+## Настройка HTTP клиента
+
+### Способ №1: передача массива параметров
+
+```php
+$client = new WiracleClient('email', 'token', [
+    'proxy' => 'tcp://localhost:8125',
+    'timeout' => 6,
+    'connect_timeout' => 4
+]);
+```
+
+Список доступных параметров: https://docs.guzzlephp.org/en/stable/request-options.html
+
+### Способ №2: передача своего `\GuzzleHttp\Client`
+
+Настройте своего http клиента:
+
+```php
+// Http клиент с логгированием всех запросов
+
+$stack = HandlerStack::create();
+$stack->push(Middleware::log($logger, new MessageFormatter(MessageFormatter::DEBUG)));
+
+$httpClient = new \GuzzleHttp\Client([
+    'handler' => $stack,
+    'timeout' => 6
+]);
+```
+
+и передайте его аргументом конструктора:
+
+```php
+$client = new WiracleClient('email', 'token', $httpClient);
+```
+
+либо сеттером:
+
+```php
+$client = new WiracleClient('email', 'token');
+$client->setHttpClient($httpClient);
+```
+
 ## Логирование
 
 В $client можно передать свой `Psr\Logger`.
