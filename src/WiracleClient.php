@@ -26,8 +26,12 @@ class WiracleClient implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
-    const DEFAULT_TIMEOUT = 10;
-    const DEFAULT_CONNECT_TIMEOUT = 4;
+    const API_ENDPOINT = 'https://wiracle.ru/';
+
+    const DEFAULT_OPTIONS = [
+        'connect_timeout' => 4,
+        'timeout' => 10
+    ];
 
     /**
      * @var string
@@ -49,29 +53,25 @@ class WiracleClient implements LoggerAwareInterface
      *
      * @param string $username
      * @param string $token
-     * @param int $timeout
+     * @param array $httpClientOptions
      */
-    public function __construct($username, $token, $timeout = self::DEFAULT_TIMEOUT)
+    public function __construct($username, $token, array $httpClientOptions = self::DEFAULT_OPTIONS)
     {
         $this->username = $username;
         $this->token = $token;
 
-        $this->httpClient = self::createHttpClient($timeout);
+        $this->httpClient = self::createHttpClient($httpClientOptions);
 
         $this->logger = new NullLogger();
     }
 
     /**
-     * @param int $timeout
+     * @param array $httpClientOptions
      * @return \GuzzleHttp\Client
      */
-    protected static function createHttpClient($timeout = self::DEFAULT_TIMEOUT)
+    protected static function createHttpClient(array $httpClientOptions = self::DEFAULT_OPTIONS)
     {
-        return new \GuzzleHttp\Client([
-            'base_uri' => 'https://wiracle.ru/',
-            'connect_timeout' => self::DEFAULT_CONNECT_TIMEOUT,
-            'timeout' => $timeout
-        ]);
+        return new \GuzzleHttp\Client($httpClientOptions);
     }
 
     /**
@@ -79,14 +79,14 @@ class WiracleClient implements LoggerAwareInterface
      *
      * @param string $username
      * @param string $password
-     * @param int $timeout
+     * @param array $httpClientOptions
      * @return TokenResponse
      *
      * @throws WiracleAPIException
      */
-    public static function sendTokenRequest($username, $password, $timeout = self::DEFAULT_TIMEOUT)
+    public static function sendTokenRequest($username, $password, array $httpClientOptions = self::DEFAULT_OPTIONS)
     {
-        $httpClient = self::createHttpClient($timeout);
+        $httpClient = self::createHttpClient($httpClientOptions);
 
         try {
             $request = new TokenRequest($username, $password);
@@ -106,16 +106,24 @@ class WiracleClient implements LoggerAwareInterface
     }
 
     /**
+     * @param \GuzzleHttp\Client $httpClient
+     */
+    public function setHttpClient(\GuzzleHttp\Client $httpClient)
+    {
+        $this->httpClient = $httpClient;
+    }
+
+    /**
      * @param $username
      * @param $password
-     * @param $timeout
+     * @param array $httpClientOptions
      * @return string
      *
      * @throws WiracleAPIException
      */
-    public static function getToken($username, $password, $timeout = self::DEFAULT_TIMEOUT)
+    public static function getToken($username, $password, array $httpClientOptions = self::DEFAULT_OPTIONS)
     {
-        $response = self::sendTokenRequest($username, $password, $timeout);
+        $response = self::sendTokenRequest($username, $password, $httpClientOptions);
         return $response->getToken();
     }
 
@@ -172,6 +180,10 @@ class WiracleClient implements LoggerAwareInterface
                 'X-WSSE' => $this->generateWsseHeader()
             ]
         ]);
+
+        if (!isset($request_params['base_uri'])) {
+            $request_params['base_uri'] = self::API_ENDPOINT;
+        }
 
         /*
         $stack = HandlerStack::create();
