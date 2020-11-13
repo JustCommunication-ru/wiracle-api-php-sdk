@@ -156,10 +156,16 @@ $client->setHttpClient($httpClient);
 
 ## Логирование
 
-В $client можно передать свой `Psr\Logger`.
+В `$client` можно передать свой `Psr\Logger`.
 
 ```php
 $client->setLogger($someLogger);
 ```
 
 По-умолчанию, логирование отключено.
+
+## Тесты
+
+Запустить тесты можно командой:
+
+`vendor/bin/phpunit`

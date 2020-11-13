@@ -1,7 +1,9 @@
 {
     "name": "justcommunication-ru/wiracle-api-php-sdk",
     "description": "Wiracle.ru API PHP SDK",
+    "keywords": ["wiracle","wiracle.ru","api","sdk"],
     "type": "library",
+    "license": "MIT",
     "require": {
         "psr/log": "^1.1",
         "guzzlehttp/guzzle": "^6.5",
